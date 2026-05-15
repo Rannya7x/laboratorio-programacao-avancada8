@@ -1,8 +1,9 @@
 #include "stdio.h"
+#include "mpeg.h"
 
 int main (int argc, char **argv){
     if (argc<2){
-        printf("Uso: %s <arquivo.mpg>\n", argv);
+        printf("Uso: %s <arquivo.mpg>\n", *argv);
         return 1;
     }
 
@@ -12,9 +13,9 @@ int main (int argc, char **argv){
         return 1;
     }
 
-    unsigned char buffer[10];
-    while(fread(buffer, 1,3, mpg)==3){
-        if(buffer==0x00 && buffer[9] == 0x00 && buffer[11] == 0x01){
+    unsigned char buffer[3];
+    while(fread(buffer, sizeof(unsigned char), 3, mpg)==3){
+        if(buffer[0]==0x00 && buffer[1] == 0x00 && buffer[2] == 0x01){
             unsigned char stream_id = fgetc(mpg);
             processar_stream(stream_id, mpg);
         } else{
